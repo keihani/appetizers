@@ -54,6 +54,7 @@ class AppController:
 
             elif choice == "4":
                 print("ℹ️ Add batch file to the Library")
+                self.doi_manager.process_batch_file()
 
             elif choice == "5":
                 print("ℹ️ Kevin Keihani")

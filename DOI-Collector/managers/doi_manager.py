@@ -11,6 +11,54 @@ class DOIManager:
         self.batch_file = os.path.join("data", "batch.txt")
         self.snapshots_file = snapshots_file
 
+
+    def process_batch_file(self):
+        """Process DOIs from batch file with user confirmation."""
+        if not os.path.exists(self.batch_file):
+            print("⚠️ No batch file found to process.")
+            return
+
+        # Show warning for backup
+        print("⚠️ Warning: You are about to process 'data/batch.txt'.")
+        print("Make sure you have a backup if needed.")
+        confirm = input("Proceed with processing? (y/n): ").strip().lower()
+
+        if confirm != "y":
+            print("Returning to menu without processing batch file.")
+            return
+
+        # Load batch file using FileManager
+        content = FileManager.read_file(self.batch_file)
+        if not content:
+            print("⚠️ Batch file is empty.")
+            return
+
+        lines = [line.strip() for line in content.splitlines() if line.strip()]
+        if not lines:
+            print("⚠️ No valid DOIs found in batch file.")
+            return
+
+        total = len(lines)
+        success = 0
+
+        for doi in lines:
+            if self.add_doi(doi):
+                success += 1
+
+        percentage = (success / total) * 100 if total > 0 else 0
+        print(f"✅ {success}/{total} DOIs added successfully "
+              f"({percentage:.2f}% added).")
+
+        # Delete batch file after processing
+        try:
+            os.remove(self.batch_file)
+            print("🗑️ Batch file deleted after processing.")
+        except Exception as e:
+            print(f"⚠️ Could not delete batch file: {e}")
+
+
+
+
     def get_user_input(self):
         """Get keywords and row count from user input."""
         keyword = input("Enter keywords: ").strip()
@@ -97,6 +145,29 @@ class DOIManager:
         total_dois = FileManager.count_dois(self.dois_file)
         print("✅ DOI and snapshot added successfully.")
         print(f"📊 Total DOIs stored: {total_dois}")
+
+    def add_doi(self, doi):
+        doi = self.clean_doi_prefix(doi.strip())
+        content = FileManager.read_file(self.dois_file)
+        existing_dois = {line.strip() for line in content.splitlines()} if content else set()
+
+        if doi in existing_dois:
+            return False
+
+        title, abstract = MetadataFetcher.fetch_metadata(doi)
+        if not title:
+            return False
+
+        FileManager.append_file(self.dois_file, doi + "\n")
+
+        snapshot = (
+            f"DOI: {doi}\n"
+            f"Title: {title or 'N/A'}\n"
+            f"Abstract: {abstract or 'N/A'}\n"
+            + "-" * 80 + "\n"
+        )
+        FileManager.append_file(self.snapshots_file, snapshot)
+        return True
 
     def batch_input_menu(self):
         print("\nBatch DOI Input Menu")
