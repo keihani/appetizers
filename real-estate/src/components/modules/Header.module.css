@@ -1,0 +1,33 @@
+.container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 30px 10px 90px 10px;
+    background: rgb(241,4,44);
+    background: linear-gradient(180deg, rgba(241,4,44,1) 0%, rgba(233,17,97,0.9529061624649859) 35%, rgba(150,89,156,0.6279761904761905) 69%, rgba(68,156,210,0.17139355742296913) 86%, rgba(0,212,255,0) 100%);
+    color: white;
+    align-items: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.left{
+    display: flex;
+    justify-content: space-around;
+}
+
+.left a{
+    padding: 0px 30px;
+}
+.login{
+    background-color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    color: white;
+    padding: 10px 20px;
+    margin: 0px 30px;
+}
+
+.login a{
+    color: rgb(241,4,44);
+}

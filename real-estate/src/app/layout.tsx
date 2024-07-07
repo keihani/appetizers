@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "./globals.css";
 import localFont from "next/font/local";
+import Layout from "@/components/layout/Layout";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 const regularFont = localFont({
-  src: "../../public/fonts/Lato-Regular.ttf"
-})
+  src: "../../public/fonts/Lato-Regular.ttf",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +22,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={regularFont.className}>{children}</body>
+      <body className={regularFont.className}>
+        <Layout>{children}</Layout>
+      </body>
     </html>
   );
 }
