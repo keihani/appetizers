@@ -107,16 +107,14 @@ class DOIManager:
         print("0. Back to main menu")
         choice = input("Select an option: ").strip()
 
-        batch_file = os.path.join("data", "batch.txt")
-
         if choice == "1":
             print("⚠️ Attention: You are responsible for ensuring the accuracy of the information provided.")
-            dois = input("Enter DOIs separated by ';': ").strip()
+            dois = input("Enter DOIs separated by ';': ").strip().replace(";", "\n")
             if not dois:
                 print("No input provided.")
             else:
-                FileManager.write_file(batch_file, dois)
-                print(f"DOIs saved to {batch_file}")
+                FileManager.append_file(self.batch_file, dois)
+                print(f"DOIs saved to {self.batch_file}")
 
         elif choice == "2":
             file_path = input("Enter the file path: ").strip()
@@ -125,8 +123,8 @@ class DOIManager:
             if content is None:
                 print("File not found or empty.")
             else:
-                FileManager.write_file(batch_file, content)
-                print(f"DOIs from file saved to {batch_file}")
+                FileManager.append_file(self.batch_file, content)
+                print(f"DOIs from file saved to {self.batch_file}")
 
         elif choice == "0":
             return
