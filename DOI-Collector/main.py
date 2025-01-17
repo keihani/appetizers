@@ -49,9 +49,7 @@ def count_dois(dois_file):
 
 
 def add_doi(dois_file, snapshots_file):
-    # Get DOI input from user
     doi = input("Enter DOI link: ").strip()
-    # Remove known prefixes from the start
     prefixes = [
         "https://doi.org/",
         "https://www.doi.org/",
@@ -65,40 +63,34 @@ def add_doi(dois_file, snapshots_file):
             doi = doi[len(prefix):]
     doi = doi.strip()
 
-    # Read existing DOIs from file (if file exists)
     try:
         with open(dois_file, "r", encoding="utf-8") as f:
             existing_dois = {line.strip() for line in f if line.strip()}
     except FileNotFoundError:
         existing_dois = set()
 
-    # Check duplication
     if doi in existing_dois:
         print("⚠️ This DOI already exists in the file.")
         print(f"📊 Total DOIs stored: {len(existing_dois)}")
         return
 
-    # Fetch metadata
     title, abstract = fetch_metadata(doi)
     if not title:
         print("❌ Invalid DOI or metadata not found. Nothing was saved.")
         print(f"📊 Total DOIs stored: {len(existing_dois)}")
         return
 
-    # Show metadata
     print(f"\n📄 Title: {title}")
     print(f"\n📝 Abstract: {abstract}\n")
 
-    # Save DOI to list
     with open(dois_file, "a", encoding="utf-8") as f:
         f.write(doi + "\n")
 
-    # Save snapshot (DOI + Title + Abstract)
     with open(snapshots_file, "a", encoding="utf-8") as f:
         f.write("DOI: " + doi + "\n")
         f.write("Title: " + (title or "N/A") + "\n")
         f.write("Abstract: " + (abstract or "N/A") + "\n")
-        f.write("-" * 80 + "\n")  # separator line
+        f.write("-" * 80 + "\n") 
 
     total_dois = count_dois(dois_file)
     print("✅ DOI and snapshot added successfully.")
@@ -109,7 +101,6 @@ if __name__ == "__main__":
     dois_file = os.path.join("data", "dois.txt")
     snapshots_file = os.path.join("data", "paper_snapshots.txt")
 
-    # Show count at program start
     print(f"📊 Starting with {count_dois(dois_file)} DOIs stored.\n")
 
     while True:
