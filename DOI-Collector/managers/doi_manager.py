@@ -11,14 +11,12 @@ class DOIManager:
         self.batch_file = os.path.join("data", "batch.txt")
         self.snapshots_file = snapshots_file
 
-
     def process_batch_file(self):
         """Process DOIs from batch file with user confirmation."""
         if not os.path.exists(self.batch_file):
             print("⚠️ No batch file found to process.")
             return
 
-        # Show warning for backup
         print("⚠️ Warning: You are about to process 'data/batch.txt'.")
         print("Make sure you have a backup if needed.")
         confirm = input("Proceed with processing? (y/n): ").strip().lower()
@@ -27,7 +25,6 @@ class DOIManager:
             print("Returning to menu without processing batch file.")
             return
 
-        # Load batch file using FileManager
         content = FileManager.read_file(self.batch_file)
         if not content:
             print("⚠️ Batch file is empty.")
@@ -49,14 +46,11 @@ class DOIManager:
         print(f"✅ {success}/{total} DOIs added successfully "
               f"({percentage:.2f}% added).")
 
-        # Delete batch file after processing
         try:
             os.remove(self.batch_file)
             print("🗑️ Batch file deleted after processing.")
         except Exception as e:
             print(f"⚠️ Could not delete batch file: {e}")
-
-
 
 
     def get_user_input(self):
