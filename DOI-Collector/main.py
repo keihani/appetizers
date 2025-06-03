@@ -95,7 +95,6 @@ def add_doi(dois_file, snapshots_file):
     print("✅ DOI and snapshot added successfully.")
     print(f"📊 Total DOIs stored: {total_dois}")
 
-
 if __name__ == "__main__":
     dois_file = os.path.join("data", "dois.txt")
     snapshots_file = os.path.join("data", "paper_snapshots.txt")
