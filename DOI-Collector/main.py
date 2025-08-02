@@ -23,6 +23,26 @@
 
 import requests
 import os
+import stat
+import platform
+import subprocess
+
+def check_internet():
+    """Check internet connection by pinging CrossRef API."""
+    url = "https://api.crossref.org/works/10.1038/nphys1170"  # Known DOI
+    try:
+        response = requests.get(url, timeout=5)
+        return response.status_code == 200
+    except requests.RequestException:
+        return False
+
+def wait_for_internet():
+    """Wait until internet connection is available."""
+    while not check_internet():
+        print("⚠️ No internet connection detected. Please connect to the internet.")
+        input("Press ENTER after connecting to retry...")
+    print("✅ Internet connection verified.\n")
+
 
 def fetch_metadata(doi: str):
     """Fetch title and abstract using CrossRef API."""
@@ -70,6 +90,24 @@ def ensure_project_name(dois_file, snapshots_file):
 
     project_name = check_or_set_project(dois_file)
     check_or_set_project(snapshots_file, project_name)
+
+def set_writable(file_path):
+    """Remove read-only attribute (make file writable)."""
+    if not os.path.exists(file_path):
+        return
+    if platform.system() == "Windows":
+        subprocess.call(["attrib", "-R", file_path])
+    else:  # Linux/macOS
+        os.chmod(file_path, stat.S_IWRITE | stat.S_IREAD)
+
+def set_readonly(file_path):
+    """Set read-only attribute."""
+    if not os.path.exists(file_path):
+        return
+    if platform.system() == "Windows":
+        subprocess.call(["attrib", "+R", file_path])
+    else:  # Linux/macOS
+        os.chmod(file_path, stat.S_IREAD)
 
 def add_doi(dois_file, snapshots_file):
     doi = input("Enter DOI link: ").strip()
@@ -123,12 +161,22 @@ if __name__ == "__main__":
     dois_file = os.path.join("data", "dois.txt")
     snapshots_file = os.path.join("data", "paper_snapshots.txt")
 
+    wait_for_internet()
+
+    set_writable(dois_file)
+    set_writable(snapshots_file)
+
     ensure_project_name(dois_file, snapshots_file)
 
     print(f"📊 Starting with {count_dois(dois_file)} DOIs stored.\n")
 
-    while True:
-        add_doi(dois_file, snapshots_file)
-        again = input("Do you want to add another DOI? (y/n): ").strip().lower()
-        if again != "y":
-            break
+    try:
+        while True:
+            add_doi(dois_file, snapshots_file)
+            again = input("Do you want to add another DOI? (y/n): ").strip().lower()
+            if again != "y":
+                break
+    finally:
+        set_readonly(dois_file)
+        set_readonly(snapshots_file)
+        print("🔒 Files set to read-only. Exiting program.")
