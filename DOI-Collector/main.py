@@ -38,7 +38,6 @@ def fetch_metadata(doi: str):
         print(f"⚠️ Request error: {e}")
     return None, None
 
-
 def count_dois(dois_file):
     """Count how many DOIs are stored."""
     try:
