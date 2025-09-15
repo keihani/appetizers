@@ -50,6 +50,7 @@ class AppController:
 
             elif choice == "3":
                 print("🤖 Find Automatic (placeholder)")
+                self.doi_manager.auto_lookup()
 
             elif choice == "4":
                 print("ℹ️ Add batch file to the Library")

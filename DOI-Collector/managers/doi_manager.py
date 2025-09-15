@@ -1,13 +1,50 @@
 from managers.metadata_fetcher import MetadataFetcher
 from managers.file_manager import FileManager
 import os
+import requests
 
 class DOIManager:
     """Manages DOIs: validation, adding, and saving."""
 
     def __init__(self, dois_file, snapshots_file):
         self.dois_file = dois_file
+        self.batch_file = os.path.join("data", "batch.txt")
         self.snapshots_file = snapshots_file
+
+    def get_user_input(self):
+        """Get keywords and row count from user input."""
+        keyword = input("Enter keywords: ").strip()
+        try:
+            rows = int(input("Enter number of rows: ").strip())
+            if rows <= 0:
+                rows = 10
+        except ValueError:
+            rows = 10
+        return keyword, rows
+
+    def fetch_dois(self, keyword, rows):
+        """Fetch DOIs from CrossRef API."""
+        url = f"https://api.crossref.org/works?query={keyword}&rows={rows}"
+        response = requests.get(url).json()
+        items = response.get("message", {}).get("items", [])
+        dois = [item.get("DOI", "") for item in items if "DOI" in item]
+        return dois
+
+    def save_dois(self, dois):
+        """Append DOIs to file using FileManager."""
+        if not dois:
+            print("No DOIs found.")
+            return
+        content = "\n".join(dois) + "\n"
+        
+        FileManager.append_file(self.batch_file, content)
+        print(f"✅ {len(dois)} DOIs saved to {self.batch_file}")
+
+    def auto_lookup(self):
+        """Run the workflow."""
+        keyword, rows = self.get_user_input()
+        dois = self.fetch_dois(keyword, rows)
+        self.save_dois(dois)
 
     @staticmethod
     def clean_doi_prefix(doi: str) -> str:
