@@ -22,11 +22,12 @@ class AppController:
 
         while True:
             print("\n📌 Please choose an option:")
-            print("[1] - Add single DOI")
+            print("[1] - Add single DOI to the Library")
             print("[2] - Add batch DOIs")
-            print("[3] - Find Automatic")
-            print("[4] - About")
-            print("[5] - Exit")
+            print("[3] - Find Automatic DOIs by Keywords")
+            print("[4] - Add batch file to the Library")
+            print("[5] - About")
+            print("[6] - Exit")
 
             choice = input("👉 Enter your choice (1-5): ").strip()
 
@@ -45,14 +46,18 @@ class AppController:
 
             elif choice == "2":
                 print("📂 batch DOIs (placeholder)")
+                self.doi_manager.batch_input_menu()
 
             elif choice == "3":
                 print("🤖 Find Automatic (placeholder)")
 
             elif choice == "4":
-                print("ℹ️ Kevin Keihani")
+                print("ℹ️ Add batch file to the Library")
 
             elif choice == "5":
+                print("ℹ️ Kevin Keihani")
+
+            elif choice == "6":
                 print("👋 Exiting program...")
                 FileManager.set_readonly(self.dois_file)
                 FileManager.set_readonly(self.snapshots_file)

@@ -61,3 +61,24 @@ class FileManager:
 
         project_name = check_or_set_project(dois_file)
         check_or_set_project(snapshots_file, project_name)
+
+    @staticmethod
+    def read_file(file_path):
+        """Read and return file content as string (or None if not found/empty)."""
+        if not os.path.isfile(file_path):
+            return None
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        return content if content else None
+
+    @staticmethod
+    def write_file(file_path, content):
+        """Write string content to file (overwrite)."""
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(content)
+
+    @staticmethod
+    def append_file(file_path, content):
+        """Append string content to a file (creates it if not exists)."""
+        with open(file_path, "a", encoding="utf-8") as f:
+            f.write(content)
