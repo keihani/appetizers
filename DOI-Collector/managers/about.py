@@ -27,6 +27,19 @@ class About:
 {self.name} v.{self.version} is an Open Source software designed to help 
 researchers and developers collect, manage, and organize DOIs efficiently.
 
+Special thanks to:
+- Crossref  
+- Wiley  
+- Elsevier  
+- Springer Nature  
+- Taylor & Francis  
+- SAGE Publications  
+- Oxford University Press  
+- Cambridge University Press  
+- IEEE (Institute of Electrical and Electronics Engineers)  
+
+for providing free API access that powers this project.
+
 Copyright © 2025 under the Open Source Software License.
 This software is distributed under the terms of open source law and may be 
 freely used, modified, and shared in accordance with the applicable license.

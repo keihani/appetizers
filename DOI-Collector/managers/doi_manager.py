@@ -68,9 +68,12 @@ class DOIManager:
         """Get keywords and row count from user input."""
         keyword = input("Enter keywords: ").strip()
         try:
-            rows = int(input("Enter number of rows: ").strip())
+            rows = int(input("Enter number of rows (The default is 10, with a range from 1 up to 500): ").strip())
             if rows <= 0:
                 rows = 10
+            elif rows > 500:
+                rows = 500
+
         except ValueError:
             rows = 10
         return keyword, rows
