@@ -1,3 +1,14 @@
+# DOI-Collector v.25
+# SPDX-License-Identifier: MIT
+#
+# Author: Kevin Keihani
+# Company: Soroush Fanavari Co
+# Contact: yz.keihani@gmail.com
+# GitHub:  https://github.com/keihani
+# LinkedIn: https://linkedin.com/in/keihani
+#
+# This file is part of DOI-Collector v.25, an open source project.
+
 import requests
 
 class MetadataFetcher:

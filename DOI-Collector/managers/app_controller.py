@@ -1,6 +1,7 @@
 from managers.doi_manager import DOIManager
 from managers.file_manager import FileManager
 from managers.internet_manager import InternetManager
+from managers.about import About
 
 class AppController:
     """Runs the CLI and handles user choices."""
@@ -21,6 +22,17 @@ class AppController:
         print(f"📊 Starting with {FileManager.count_dois(self.dois_file)} DOIs stored.\n")
 
         while True:
+            # --- Show project name + DOI count each time we return ---
+            content = FileManager.read_file(self.dois_file)
+            project_name = "Unknown Project"
+            if content:
+                first_line = content.splitlines()[0]
+                if first_line.lower().startswith("project name:"):
+                    project_name = first_line.split(":", 1)[1].strip()
+
+            total_dois = FileManager.count_dois(self.dois_file)
+            print(f"\n📂 Project: {project_name} | 📊 DOIs stored: {total_dois}")
+
             print("\n📌 Please choose an option:")
             print("[1] - Add single DOI to the Library")
             print("[2] - Add batch DOIs")
@@ -29,9 +41,10 @@ class AppController:
             print("[5] - About")
             print("[6] - Exit")
 
-            choice = input("👉 Enter your choice (1-5): ").strip()
+            choice = input("👉 Enter your choice (1-6): ").strip()
 
             if choice == "1":
+                print("🔖 Add single DOI")
                 try:
                     while True:
                         InternetManager.wait_for_internet()
@@ -45,19 +58,21 @@ class AppController:
                     print("🔒 Files set to read-only. Returning to menu...")
 
             elif choice == "2":
-                print("📂 batch DOIs (placeholder)")
+                print("📂 batch DOIs")
                 self.doi_manager.batch_input_menu()
 
             elif choice == "3":
-                print("🤖 Find Automatic (placeholder)")
+                print("🤖 Find Automatic")
                 self.doi_manager.auto_lookup()
 
             elif choice == "4":
-                print("ℹ️ Add batch file to the Library")
+                print("📑 Add batch file to the Library")
                 self.doi_manager.process_batch_file()
 
             elif choice == "5":
-                print("ℹ️ Kevin Keihani")
+                print("ℹ️ About")
+                about = About("DOI-Collector", "25.0")
+                about.print_info()
 
             elif choice == "6":
                 print("👋 Exiting program...")
