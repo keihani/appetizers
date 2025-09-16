@@ -84,10 +84,8 @@ class DOIManager:
         print(f"\n📄 Title: {title}")
         print(f"\n📝 Abstract: {abstract}\n")
 
-        # Save DOI
         FileManager.append_file(self.dois_file, doi + "\n")
 
-        # Save snapshot
         snapshot = (
             f"DOI: {doi}\n"
             f"Title: {title or 'N/A'}\n"
