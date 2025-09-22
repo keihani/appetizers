@@ -50,7 +50,7 @@ class DOIManager:
         success = 0
 
         for doi in lines:
-            if self.add_doi(doi):
+            if self.add_doi_batch(doi):
                 success += 1
 
         percentage = (success / total) * 100 if total > 0 else 0
@@ -154,7 +154,7 @@ class DOIManager:
         print("✅ DOI and snapshot added successfully.")
         print(f"📊 Total DOIs stored: {total_dois}")
 
-    def add_doi(self, doi):
+    def add_doi_batch(self, doi):
         doi = self.clean_doi_prefix(doi.strip())
         content = FileManager.read_file(self.dois_file)
         existing_dois = {line.strip() for line in content.splitlines()} if content else set()

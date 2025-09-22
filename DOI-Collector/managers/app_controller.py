@@ -52,10 +52,8 @@ class AppController:
                         again = input("Do you want to add another DOI? (y/n): ").strip().lower()
                         if again != "y":
                             break
-                finally:
-                    FileManager.set_readonly(self.dois_file)
-                    FileManager.set_readonly(self.snapshots_file)
-                    print("🔒 Files set to read-only. Returning to menu...")
+                except Exception as e:
+                    print(f"❌ An error occurred while adding DOI: {e}")
 
             elif choice == "2":
                 print("📂 batch DOIs")
