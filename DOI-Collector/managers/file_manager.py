@@ -14,6 +14,7 @@ import stat
 import platform
 import subprocess
 
+
 class FileManager:
     """Handles file operations and permissions."""
 
@@ -93,3 +94,64 @@ class FileManager:
         """Append string content to a file (creates it if not exists)."""
         with open(file_path, "a", encoding="utf-8") as f:
             f.write(content)
+# ...existing code...
+
+    @staticmethod
+    def is_admin():
+        """Check if the script is running with administrator/root privileges."""
+        try:
+            if platform.system() == "Windows":
+                import ctypes
+                return ctypes.windll.shell32.IsUserAnAdmin() != 0
+            else:
+                return os.geteuid() == 0
+        except Exception:
+            return False
+
+    @staticmethod
+    def request_admin():
+        """Request administrator/root privileges to rerun the script if not already elevated."""
+        if FileManager.is_admin():
+            return True
+        print("⚠️ Administrator privileges are required. Attempting to elevate...")
+        try:
+            if platform.system() == "Windows":
+                import sys
+                ctypes = __import__('ctypes')
+                params = ' '.join([f'"{arg}"' for arg in sys.argv])
+                ctypes.windll.shell32.ShellExecuteW(
+                    None, "runas", sys.executable, params, None, 1)
+                return False
+            else:
+                import sys
+                os.execvp("sudo", ["sudo", sys.executable] + sys.argv)
+        except Exception as e:
+            print(f"❌ Failed to elevate privileges: {e}")
+            return False
+        
+    @staticmethod
+    def maximize_console():
+        """Maximize the console window (works in .exe too)."""
+        if platform.system() == "Windows":
+            try:
+                import ctypes
+                kernel32 = ctypes.windll.kernel32
+                user32 = ctypes.windll.user32
+                hWnd = kernel32.GetConsoleWindow()
+                if hWnd:
+                    SW_RESTORE = 9
+                    SW_MAXIMIZE = 3
+                    user32.ShowWindow(hWnd, SW_RESTORE)   # ensure visible
+                    user32.ShowWindow(hWnd, SW_MAXIMIZE)  # maximize
+                else:
+                    print("⚠️ No console window found.")
+            except Exception as e:
+                print(f"⚠️ Failed to maximize console: {e}")
+
+    @staticmethod
+    def clear_screen():
+        """Clear console screen (cross-platform)."""
+        if platform.system() == "Windows":
+            os.system("cls")
+        else:
+            os.system("clear")

@@ -11,6 +11,7 @@
 
 import requests
 
+
 class InternetManager:
     """Handles internet connectivity checks."""
 

@@ -13,7 +13,8 @@
 
 class About:
     """Handles About information for the application."""
-
+    name = ""
+    version = ""
     def __init__(self, name: str, version: str):
         self.name = name
         self.version = version

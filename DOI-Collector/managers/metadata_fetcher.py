@@ -11,6 +11,7 @@
 
 import requests
 
+
 class MetadataFetcher:
     """Fetches metadata from CrossRef."""
 
