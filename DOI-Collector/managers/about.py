@@ -9,8 +9,6 @@
 #
 # This file is part of DOI-Collector, an open source project.
 
-
-
 class About:
     """Handles About information for the application."""
     name = ""

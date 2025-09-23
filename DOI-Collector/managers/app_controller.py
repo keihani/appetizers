@@ -4,7 +4,6 @@ from managers.internet_manager import InternetManager
 from managers.about import About
 import sys
 
-
 class AppController:
     """Runs the CLI and handles user choices."""
 

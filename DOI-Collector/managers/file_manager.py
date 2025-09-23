@@ -14,7 +14,6 @@ import stat
 import platform
 import subprocess
 
-
 class FileManager:
     """Handles file operations and permissions."""
 

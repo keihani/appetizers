@@ -14,7 +14,6 @@ from managers.file_manager import FileManager
 import os
 import requests
 
-
 class DOIManager:
     """Manages DOIs: validation, adding, and saving."""
 
