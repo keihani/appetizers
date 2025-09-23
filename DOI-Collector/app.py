@@ -7,7 +7,7 @@
 # GitHub:  https://github.com/keihani
 # LinkedIn: https://linkedin.com/in/keihani
 #
-# This file is part of DOI-Collector v.25, an open source project.
+# This file is part of DOI-Collector, an open source project.
 
 import os
 from managers import AppController
