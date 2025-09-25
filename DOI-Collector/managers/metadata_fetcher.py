@@ -21,9 +21,15 @@ class MetadataFetcher:
         try:
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
-                data = response.json()["message"]
-                title = data.get("title", ["No title found"])[0]
-                abstract = data.get("abstract", "No abstract found")
+                data = response.json().get("message", {})
+
+                # Handle title safely
+                titles = data.get("title", [])
+                title = titles[0] if titles else "No title found"
+
+                # Handle abstract safely
+                abstract = data.get("abstract") or "No abstract found"
+
                 return title, abstract
         except requests.RequestException as e:
             print(f"⚠️ Request error: {e}")
