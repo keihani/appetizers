@@ -23,11 +23,9 @@ class MetadataFetcher:
             if response.status_code == 200:
                 data = response.json().get("message", {})
 
-                # Handle title safely
                 titles = data.get("title", [])
                 title = titles[0] if titles else "No title found"
 
-                # Handle abstract safely
                 abstract = data.get("abstract") or "No abstract found"
 
                 return title, abstract
