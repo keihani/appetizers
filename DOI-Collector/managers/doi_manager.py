@@ -65,25 +65,70 @@ class DOIManager:
 
 
     def get_user_input(self):
-        """Get keywords and row count from user input."""
+        """Get keywords, row count, and whether to check abstracts."""
         keyword = input("Enter keywords: ").strip()
         try:
-            rows = int(input("Enter number of rows (The default is 10, with a range from 1 up to 500): ").strip())
+            rows = int(input("Enter number of rows (The default is 10, with a range from 1 up to 50): ").strip())
             if rows <= 0:
                 rows = 10
             elif rows > 500:
                 rows = 500
-
         except ValueError:
             rows = 10
-        return keyword, rows
 
-    def fetch_dois(self, keyword, rows):
-        """Fetch DOIs from CrossRef API."""
-        url = f"https://api.crossref.org/works?query={keyword}&rows={rows}"
-        response = requests.get(url).json()
-        items = response.get("message", {}).get("items", [])
-        dois = [item.get("DOI", "") for item in items if "DOI" in item]
+        check_input = input(
+            "Should the article's accessibility be reviewed for quality (y/n)? More precisely but slower. [default=y]: "
+        ).strip().lower()
+
+        if check_input == "" or check_input == "y":
+            check_abstract = True
+            print("y")
+        else:
+            check_abstract = False
+            print("n")
+        print("⏳ Please wait... fetching data from the Scholar.")
+        return keyword, rows, check_abstract
+
+    def fetch_dois(self, keyword, rows, check_abstract=True):
+        """
+        Fetch DOIs (optionally with abstract check) from CrossRef API.
+        If abstracts are required, query up to 5× rows until enough DOIs are found.
+        """
+        max_rows = rows * 5
+        dois = []
+        offset = 0
+        batch_size = min(rows, 50) 
+
+        while len(dois) < rows and offset < max_rows:
+            url = f"https://api.crossref.org/works?query={keyword}&rows={batch_size}&offset={offset}"
+            try:
+                response = requests.get(url, timeout=15).json()
+            except Exception as e:
+                print(f"⚠️ Request failed at offset {offset}: {e}")
+                break
+
+            items = response.get("message", {}).get("items", [])
+            if not items:
+                break 
+
+            for item in items:
+                doi = item.get("DOI", "")
+                if not doi:
+                    continue
+                doi = self.clean_doi_prefix(doi)
+
+                if check_abstract:
+                    title, abstract = MetadataFetcher.fetch_metadata(doi)
+                    if title and abstract != "No abstract found":
+                        dois.append(doi)
+                else:
+                    dois.append(doi)
+
+                if len(dois) >= rows:
+                    break
+
+            offset += batch_size
+
         return dois
 
     def save_dois(self, dois):
@@ -97,9 +142,9 @@ class DOIManager:
         print(f"✅ {len(dois)} DOIs saved to {self.batch_file}")
 
     def auto_lookup(self):
-        """Run the workflow."""
-        keyword, rows = self.get_user_input()
-        dois = self.fetch_dois(keyword, rows)
+        """Run the workflow from user input with choice of source."""
+        keyword, rows, check_abstract = self.get_user_input()
+        dois = self.fetch_dois(keyword, rows, check_abstract)
         self.save_dois(dois)
 
     @staticmethod
