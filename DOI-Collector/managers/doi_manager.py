@@ -40,7 +40,7 @@ class DOIManager:
         if not content:
             print("⚠️ Batch file is empty.")
             return
-
+        print("⏳ Please wait... Load DOIs from the batch file to the library.")
         lines = [line.strip() for line in content.splitlines() if line.strip()]
         if not lines:
             print("⚠️ No valid DOIs found in batch file.")
