@@ -1,3 +1,14 @@
+# DOI-Collector
+# SPDX-License-Identifier: MIT
+#
+# Author: Kevin Keihani
+# Company: Soroush Fanavari Co
+# Contact: yz.keihani@gmail.com
+# GitHub:  https://github.com/keihani
+# LinkedIn: https://linkedin.com/in/keihani
+#
+# This file is part of DOI-Collector, an open source project.
+
 from managers.doi_manager import DOIManager
 from managers.file_manager import FileManager
 from managers.internet_manager import InternetManager

@@ -93,7 +93,6 @@ class FileManager:
         """Append string content to a file (creates it if not exists)."""
         with open(file_path, "a", encoding="utf-8") as f:
             f.write(content)
-# ...existing code...
 
     @staticmethod
     def is_admin():
