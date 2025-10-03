@@ -58,4 +58,3 @@ repository to participate.
 ==========================================
 """)
         input("👉 Press Enter to return to the menu...")
-

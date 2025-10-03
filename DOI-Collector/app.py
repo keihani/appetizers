@@ -18,3 +18,4 @@ if __name__ == "__main__":
 
     app = AppController(dois_file, snapshots_file)
     app.run_menu()
+    
